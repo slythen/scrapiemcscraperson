@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 import pickle
 from bs4 import BeautifulSoup
 import requests
+from pprint import pprint
 
 selectP = str("http://www.directv.com/DTVAPP/compare/printablePackageChannels.jsp?packageId=1150002&skuId=P000101049&referrer=https://support.directv.com/app/answers/detail/a_id/360/kw/printable%20channel%20list")
 entertainmentP = str("http://www.directv.com/DTVAPP/compare/printablePackageChannels.jsp?packageId=1310002&skuId=sku2920002&referrer=https://support.directv.com/app/answers/detail/a_id/360/kw/printable%20channel%20list&referrer=https://support.directv.com/app/answers/detail/a_id/360/kw/printable%20channel%20list")
@@ -28,7 +29,7 @@ def packAger(urL):
     else:
         Package = 'Crap'
     return Package
-
+print 'Creating Dictionary'
 for packageUrl in urls:
     r = requests.get(packageUrl)
     soup = BeautifulSoup(r.text)
@@ -41,13 +42,21 @@ for packageUrl in urls:
     UberDict = {}
     rowNum = 0
     rows = len(tableS.find_all('tr'))
+
     while (rowNum < rows):
         cell = tableS.find_all('tr')[rowNum]
-        UberDict[str(cell.find('td', width='98%').text).strip().strip('*')] = [str(cell.find('td', class_="ch-no").text).strip()]
+        channelName = str(cell.find('td', width='98%').text).strip().strip('*').encode("ASCII",'ignore')
+        if channelName == 'Disney XD  HD':
+            channelName = 'Disney XD'
+        UberDict[channelName] = [str(cell.find('td', class_="ch-no").text).strip()]
         rowNum += 1
+    print '--created:', packAger(packageUrl)
 
+print "Done With making the Dictionary"
+
+print 'Adding packages to Dictionary'
 for currentPack in urls:
-    r = requests.get(packageUrl)
+    r = requests.get(currentPack)
     soup = BeautifulSoup(r.text)
     RoW = []
     MainT = soup.find_all('table', class_="package")
@@ -59,10 +68,17 @@ for currentPack in urls:
     rows = len(tableS.find_all('tr'))
     while (rowNum < rows):
         cell = tableS.find_all('tr')[rowNum]
-        UberDict[str(cell.find('td', width='98%').text).strip().strip('*')].append(packAger(currentPack))        
+        channelName = str(cell.find('td', width='98%').text).strip().strip('*').encode("ASCII",'ignore')
+        if channelName == 'Disney XD  HD':
+            channelName = 'Disney XD'
+        UberDict[channelName].append(packAger(currentPack))        
         rowNum += 1
+    print '--added:', packAger(currentPack)
 
-pickle.dump(UberDict,open('DTVDict.p', 'w'))
+print 'Done! Check to make sure this is correct:'
+
+pprint(UberDict)
+#pickle.dump(UberDict,open('DTVDict.p', 'w'))
 #print UberDict
 
 
