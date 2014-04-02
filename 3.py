@@ -1,3 +1,5 @@
+#!/usr/bin/python
+import pickle
 from bs4 import BeautifulSoup
 import requests
 
@@ -60,6 +62,7 @@ for currentPack in urls:
         UberDict[str(cell.find('td', width='98%').text).strip().strip('*')].append(packAger(currentPack))        
         rowNum += 1
 
-print UberDict
+pickle.dump(UberDict,open('DTVDict.p', 'w'))
+#print UberDict
 
 
