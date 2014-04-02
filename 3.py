@@ -63,16 +63,3 @@ for currentPack in urls:
 print UberDict
 
 
-#rowS = []
-#for i in TableS:
-#    rowS.append(BeautifulSoup(str(i)).find_all('tr'))
-
-#for i in rowS:
-#    help(i)
-    
-    
-
-
-
-#first 4 are en espanol
-#print RoW[0]
