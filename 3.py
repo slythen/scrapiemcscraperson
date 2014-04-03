@@ -45,7 +45,7 @@ for packageUrl in urls:
 
     while (rowNum < rows):
         cell = tableS.find_all('tr')[rowNum]
-        channelName = str(cell.find('td', width='98%').text).strip().strip('*').encode("ASCII",'ignore')
+        channelName = str(cell.find('td', width='98%').text).strip().strip('*').replace("'",'').encode("ASCII",'ignore')
         if channelName == 'Disney XD  HD':
             channelName = 'Disney XD'
         UberDict[channelName] = [str(cell.find('td', class_="ch-no").text).strip()]
@@ -68,7 +68,7 @@ for currentPack in urls:
     rows = len(tableS.find_all('tr'))
     while (rowNum < rows):
         cell = tableS.find_all('tr')[rowNum]
-        channelName = str(cell.find('td', width='98%').text).strip().strip('*').encode("ASCII",'ignore')
+        channelName = str(cell.find('td', width='98%').text).strip().strip('*').replace("'",'').encode("ASCII",'ignore')
         if channelName == 'Disney XD  HD':
             channelName = 'Disney XD'
         UberDict[channelName].append(packAger(currentPack))        
